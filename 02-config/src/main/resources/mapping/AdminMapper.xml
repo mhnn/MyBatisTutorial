@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace:指定为mapper接口的全类名
+现今Admin的mapper映射文件已与AdminMapper接口绑定,而接口内有个查询方法
+映射文件                    接口
+命名空间            <===>   接口全类名
+查询体唯一标识id    <===>   接口方法名
+这样子就表示了这个select标签是这个mapper接口的这个方法的实现
+
+这么做的好处是:
+1.在执行查询语句时,指定的sql语句的id可以变短
+2.selectOne默认传参类型是Object,使用接口动态绑定后可以限制为业务想要的类型(类型安全)
+-->
+<mapper namespace="com.atguigu.mybatis.mapper.AdminMapper">
+    <select id="getAdminById" resultType="admin">
+        <!--#{id}从传递过来的参数中取出id值 -->
+        select * from tbl_admin where a_id = #{aId}
+    </select>
+</mapper>
