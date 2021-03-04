@@ -72,3 +72,8 @@ settings标签中有许多mybatis的设置属性
 | arraylist  | ArrayList  |
 | collection | Collection |
 | iterator   | Iterator   |
+
+# typeHandlers标签简单介绍
+
+**重要:用于做java和数据库数据之间类型的映射**
+
