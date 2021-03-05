@@ -73,7 +73,65 @@ settings标签中有许多mybatis的设置属性
 | collection | Collection |
 | iterator   | Iterator   |
 
-# typeHandlers标签简单介绍
+# plugins标签
 
-**重要:用于做java和数据库数据之间类型的映射**
+插件标签,学习完原理后再来深入了解
+
+MyBatis允许程序猿拦截到映射的语句的核心步骤.具体有四大对象的执行方法:
+
+* Executor/执行器(update,query...)
+* ParameterHandler/参数处理器(getParameterObject,setParameters)
+* ResultSetHandler/结果集处理器,将执行后获得的结果集封装成JavaBean对象
+* StatementHandler/语句处理器
+
+可以在这些方法执行的前后进行拦截(动态代理)
+
+# enviroments
+
+> 主要用于配置事务管理器和数据源,整合spring后淘汰
+
+配置环境
+
+* environment:具体的环境信息
+  * transactionManager:事务管理器
+  * dataSource:数据源
+
+# databaseIdProvider
+
+**数据库厂商标识**
+
+MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 `databaseId` 属性.
+
+# mappers
+
+将sql映射文件注册到全局配置中
+
+```xml
+<mappers>
+    <mapper resource="mapping/AdminMapper.xml"/>
+    <!--注册接口
+	1.有sql映射文件,xml与接口类同名,且在同一目录
+	主要用于基于注解的Mapper接口映射
+	-->
+    <mapper class="com.atguigu.mybatis.AdminMapper" />
+</mappers>
+```
+
+**批量注册**
+
+需要xml与接口类同名且在同一个包下
+
+```xml
+<mappers>
+	<package name="com.atguigu.mybatis.mapper" />
+</mappers>
+```
+
+# 补充
+
+配置文件的标签有先后顺序,查看configuration的dtd约束即可看到,顺序如下:
+
+```
+properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?
+```
 
