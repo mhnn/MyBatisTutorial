@@ -43,35 +43,22 @@ settings标签中有许多mybatis的设置属性
 
 ​	mybatis为java数据类型默认起好了别名
 
-| 别名       | 映射的类型 |
-| :--------- | :--------- |
-| _byte      | byte       |
-| _long      | long       |
-| _short     | short      |
-| _int       | int        |
-| _integer   | int        |
-| _double    | double     |
-| _float     | float      |
-| _boolean   | boolean    |
-| string     | String     |
-| byte       | Byte       |
-| long       | Long       |
-| short      | Short      |
-| int        | Integer    |
-| integer    | Integer    |
-| double     | Double     |
-| float      | Float      |
-| boolean    | Boolean    |
-| date       | Date       |
-| decimal    | BigDecimal |
-| bigdecimal | BigDecimal |
-| object     | Object     |
-| map        | Map        |
-| hashmap    | HashMap    |
-| list       | List       |
-| arraylist  | ArrayList  |
-| collection | Collection |
-| iterator   | Iterator   |
+| 别名      | 映射的类型 | 别名       | 映射的类型 |
+| :-------- | :--------- | ---------- | ---------- |
+| _byte     | byte       | byte       | Byte       |
+| _long     | long       | long       | Long       |
+| _short    | short      | short      | Short      |
+| _int      | int        | int        | Integer    |
+| _integer  | int        | integer    | Integer    |
+| _double   | double     | double     | Double     |
+| _float    | float      | float      | Float      |
+| _boolean  | boolean    | boolean    | Boolean    |
+| string    | String     | decimal    | BigDecimal |
+| date      | Date       | bigdecimal | BigDecimal |
+| object    | Object     | map        | Map        |
+| hashmap   | HashMap    | list       | List       |
+| arraylist | ArrayList  | collection | Collection |
+| iterator  | Iterator   |            |            |
 
 # plugins标签
 
