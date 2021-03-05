@@ -19,4 +19,5 @@ namespace:指定为mapper接口的全类名
         <!--#{id}从传递过来的参数中取出id值 -->
         select * from tbl_admin where a_id = #{aId}
     </select>
+
 </mapper>

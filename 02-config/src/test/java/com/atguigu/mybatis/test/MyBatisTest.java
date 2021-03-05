@@ -2,6 +2,7 @@ package com.atguigu.mybatis.test;
 
 import com.atguigu.mybatis.bean.Admin;
 import com.atguigu.mybatis.mapper.AdminMapper;
+import com.atguigu.mybatis.mapper.AdminMapperAnnotation;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -41,7 +42,7 @@ public class MyBatisTest {
         //  2.parameter,要执行sql的用到的参数
         SqlSession openSession = sqlSessionFactory.openSession();
         try {
-            Admin admin = openSession.selectOne("com.atguigu.mybatis.AdminMapper.selectAdmin", 1);
+            Admin admin = openSession.selectOne("com.atguigu.mybatis.mapper.AdminMapper.getAdminById", 1);
             System.out.println(admin);
         }finally {
             openSession.close();
@@ -80,5 +81,17 @@ public class MyBatisTest {
             openSession.close();
         }
 
+    }
+    @Test
+    public void selectByIdForAnno() throws IOException{
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        SqlSession openSession = sqlSessionFactory.openSession();
+        try {
+            AdminMapperAnnotation adminMapperAnnotation =openSession.getMapper(AdminMapperAnnotation.class);
+            Admin admin = adminMapperAnnotation.getAdminById(1);
+            System.out.println(admin);
+        }finally {
+            openSession.close();
+        }
     }
 }
