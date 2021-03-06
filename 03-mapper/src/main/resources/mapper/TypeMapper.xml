@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.TypeMapper">
+    <resultMap id="myTypeInfo" type="HashMap">
+        <id column="type_name" property="key" />
+        <result property="value" column="type_id" />
+    </resultMap>
+    <select id="getTypeInfo" resultMap="myTypeInfo">
+        select * from tbl_type
+    </select>
+    <select id="selectTypeIdByName" resultType="int">
+        select type_id from tbl_type
+        where type_name = #{typeName}
+    </select>
+</mapper>

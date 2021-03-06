@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.SubjectMapper">
+    <update id="updateSubjectType" >
+        update tbl_subject
+        set type_id = #{typeId}
+        where s_id = #{sId}
+    </update>
+
+    <select id="selectSubjectId" resultType="int">
+        select s_id from tbl_subject
+    </select>
+    
+    <update id="updateSubjectRate">
+        update tbl_subject
+        set s_rate = #{sRate}
+        where s_id = #{sId}
+    </update>
+    
+    <update id="updateHit">
+        update tbl_subject
+        set s_hit = #{sHit}
+        where s_id = #{sId}
+    </update>
+</mapper>
