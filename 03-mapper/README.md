@@ -130,3 +130,256 @@ ResultMap
 
 # resultMap关联查询
 
+**业务场景**
+
+```java
+public class Subject {
+    private Integer sId;
+    private String sName;
+    private String sDirector;
+    private String sActor;
+    private String picSrc;
+    private Float sRate;
+    private String sDate;
+    private Type type;  //tbl_type表的映射实体类
+    private String sContent;
+    private Integer sHit;
+    ...
+```
+
+**业务要求**
+
+查出电影信息的同时，也查出电影对应的类型名称
+
+```java
+//接口类#方法
+Subject getSubjectAndType(Integer sId);
+```
+
+```xml
+<!--映射文件-->
+<!--使用级联属性封装结果集-->
+    <resultMap id="MyDifSub" type="com.atguigu.mybatis.bean.Subject">
+        <id column="s_id" property="sId" />
+        <result column="s_name" property="sName" />
+        <result column="s_director" property="sDirector" />
+        <result column="s_actor" property="sActor" />
+        <result column="pic_src" property="picSrc" />
+        <result column="s_rate" property="sRate" />
+        <result column="s_date" property="sDate" />
+        <!--使用级联属性封装结果集-->
+        <result column="type_id" property="type.typeId" />
+        <result column="type_name" property="type.typeName" />
+        
+        <result column="s_content" property="sContent" />
+        <result column="s_hit" property="sHit" />
+    </resultMap>
+
+<select id="getSubjectAndType" resultMap="MyDifSub">
+        select s_id,s_name,s_director,s_actor,pic_src,s_rate,s_date,a.type_id,b.type_name,s_content,s_hit
+        from tbl_subject a,tbl_type b
+        where a.type_id = b.type_id and a.s_id = #{sId}
+    </select>
+```
+
+**使用association指定联合的javaBean对象**
+
+```xml
+<resultMap id="MyDifSub" type="com.atguigu.mybatis.bean.Subject">
+        <id column="s_id" property="sId" />
+        <result column="s_name" property="sName" />
+        <result column="s_director" property="sDirector" />
+        <result column="s_actor" property="sActor" />
+        <result column="pic_src" property="picSrc" />
+        <result column="s_rate" property="sRate" />
+        <result column="s_date" property="sDate" />
+        <result column="s_content" property="sContent" />
+        <result column="s_hit" property="sHit" />
+        <!--使用association封装结果集-->
+        <association property="type" javaType="com.atguigu.mybatis.bean.Type">
+            <id property="typeId" column="type_id" />
+            <result column="type_name" property="typeName" />
+        </association>
+    </resultMap>
+```
+
+**使用association进行分步查询**
+
+业务场景：
+
+事先就有根据电影类型id查电影名，又因为有根据电影id查电影信息（其中包括电影类型id），所以借助这两个查询功能即可实现上边的业务需求
+
+```java
+//TypeMapper.java#方法
+Integer selectTypeIdByName(String typeName);
+```
+
+```java
+//SubjectMapper.java#方法
+Subject getSubjectByStep(Integer sId);
+```
+
+```xml
+<!--SubjectMapper.xml-->
+<resultMap id="MySubjectBySetp" type="com.atguigu.mybatis.bean.Subject">
+        <id column="s_id" property="sId" />
+        <result column="s_name" property="sName" />
+        <result column="s_director" property="sDirector" />
+        <result column="s_actor" property="sActor" />
+        <result column="pic_src" property="picSrc" />
+        <result column="s_rate" property="sRate" />
+        <result column="s_date" property="sDate" />
+        <result column="s_content" property="sContent" />
+        <result column="s_hit" property="sHit" />
+        <!--使用association封装结果集
+            select:表明当前这个属性是既调用select指定的方法查出来的
+            column:指定将哪一列的值传给这个方法,查出对象并封装给property指定的属性
+        -->
+        <association property="type" select="com.atguigu.mybatis.mapper.TypeMapper.getTypeById"
+        column="type_id">
+            <id property="typeId" column="type_id" />
+            <result column="type_name" property="typeName" />
+        </association>
+    </resultMap>
+<!--Subject getSubjectByStep(Integer sId);-->
+    <select id="getSubjectByStep" resultMap="MySubjectBySetp">
+        select * from tbl_subject
+        where s_id = #{sId}
+    </select>
+```
+
+**延迟加载**
+
+业务场景：
+
+目前每次查电影信息时，都会自动地把电影类型查出来
+
+我们希望在类型名需要时再查询
+
+需要对分布查询再做配置
+
+```xml
+<!--mybatis-config.xml-->
+...
+<!--当开启时，所有关联对象都会延迟加载。 -->
+<setting name="lazyLoadingEnabled" value="true"/>
+<!--开启时，任一方法的调用都会加载该对象的所有延迟加载属性。 否则，每个延迟加载属性会按需加载-->
+<setting name="aggressiveLazyLoading" value="false"/>
+...
+```
+
+
+
+**Collection定义关联集合封装查询**
+
+业务场景：
+
+查询类型名时将这个类型对应的所有电影信息查询出来
+
+并封装到一个List当中
+
+```xml
+<!--bean中带有List，需要封装，使用Collection来封装集合-->
+<resultMap id="MyType" type="com.atguigu.mybatis.bean.Type">
+        <id property="typeId" column="type_id" />
+        <result column="type_name" property="typeName" />
+        <!--collection定义关联集合类型的属性封装规则
+            ofType:指定集合元素的类型（此处是Subject）
+            property:指定要关联的集合对应哪个属性
+        -->
+        <collection property="subs" ofType="com.atguigu.mybatis.bean.Subject">
+            <!--定义这个集合中元素的封装规则-->
+            <id column="s_id" property="sId" />
+            <result column="s_name" property="sName" />
+            <result column="s_director" property="sDirector" />
+            <result column="s_actor" property="sActor" />
+            <result column="pic_src" property="picSrc" />
+            <result column="s_rate" property="sRate" />
+            <result column="s_date" property="sDate" />
+            <result column="s_content" property="sContent" />
+            <result column="s_hit" property="sHit" />
+        </collection>
+    </resultMap>
+```
+
+**Collection之分布查询&懒加载**
+
+```java
+//Type实体
+public class Type {
+    private Integer typeId;
+    private String typeName;
+    private List<Subject> subs;
+    ...
+```
+
+```java
+//TypeMapper接口
+..
+Type getTypeIdByNameByStep(String type_name);
+..
+```
+
+```xml
+<!--TypeMapper映射-->
+    <resultMap id="MyTypeStep" type="com.atguigu.mybatis.bean.Type">
+        <id column="type_id" property="typeId" />
+        <result column="type_name" property="typeName" />
+        <!--collection中也有select属性-->
+        <collection property="subs" select="com.atguigu.mybatis.mapper.SubjectMapper.getSubjectByTypeName"
+        column="type_id"></collection>
+    </resultMap>
+    <!--Type getTypeIdByNameByStep(String type_name);-->
+    <select id="getTypeIdByNameByStep" resultMap="MyTypeStep">
+        select * from tbl_type
+        where type_name = #{typeName}
+    </select>
+```
+
+```java
+//SubjectMapper接口类
+...
+List<Subject> getSubjectByTypeName(Integer typeId);
+    ...
+```
+
+```xml
+<!--SubjectMapper映射-->
+    <!--List<Subject> getSubjectByTypeName(String typeName);-->
+    <select id="getSubjectByTypeName" resultType="com.atguigu.mybatis.bean.Subject">
+        select * from tbl_subject
+        where type_id = #{typeId}
+    </select>
+```
+
+流程：
+
+TypeMapper调用返回Type类型结果集，然后用结果集中的type_id到SubjectMapper查询对应的电影们，并封装到List当中
+
+**扩展：分步查询查询多列值&fetchType**
+
+1. 上例中的分步查询都仅传递了一个id、type_id，当业务需要传递多列值时，
+
+可以将多列值封装map进行传递，
+
+column="{key=colum1,key2=column2}"
+
+```xml
+...
+<collection property="subs" select="com.atguigu.mybatis.mapper.SubjectMapper.getSubjectByTypeName"
+        column="{typeId=type_id}"></collection>
+...
+```
+
+2. collection/association中有**fetchType="lazy"**
+
+表示使用延迟加载/懒加载
+
+​	-lazy：延迟
+
+​	-eager：立即
+
+3. discriminator鉴别器
+
+鉴别器：mybatis可以使用其判断某列的值，然后根据某列的值改变封装行为
+

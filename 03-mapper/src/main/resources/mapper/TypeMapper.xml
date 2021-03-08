@@ -14,4 +14,46 @@
         select type_id from tbl_type
         where type_name = #{typeName}
     </select>
+
+    <select id="getTypeById" resultType="com.atguigu.mybatis.bean.Type">
+        select * from tbl_type
+        where type_id = #{typeId}
+    </select>
+    <resultMap id="MyType" type="com.atguigu.mybatis.bean.Type">
+        <id property="typeId" column="type_id" />
+        <result column="type_name" property="typeName" />
+        <!--collection定义关联集合类型的属性封装规则
+            ofType:指定集合元素的类型（此处是Subject）
+            property:指定要关联的集合对应哪个属性
+        -->
+        <collection property="subs" ofType="com.atguigu.mybatis.bean.Subject">
+            <!--定义这个集合中元素的封装规则-->
+            <id column="s_id" property="sId" />
+            <result column="s_name" property="sName" />
+            <result column="s_director" property="sDirector" />
+            <result column="s_actor" property="sActor" />
+            <result column="pic_src" property="picSrc" />
+            <result column="s_rate" property="sRate" />
+            <result column="s_date" property="sDate" />
+            <result column="s_content" property="sContent" />
+            <result column="s_hit" property="sHit" />
+        </collection>
+    </resultMap>
+    <!--Type getTypeByIdPlus(Integer typeId);-->
+    <select id="getTypeByIdPlus" resultMap="MyType">
+        SELECT t.type_id,t.type_name,s.s_id,s.s_name,s.s_director,s.s_actor,s.pic_src,s.s_rate,s_date,s.s_content,s.s_hit FROM tbl_type t LEFT JOIN tbl_subject s
+        ON t.type_id = s.type_id
+        WHERE t.type_id = #{typeId}
+    </select>
+    <resultMap id="MyTypeStep" type="com.atguigu.mybatis.bean.Type">
+        <id column="type_id" property="typeId" />
+        <result column="type_name" property="typeName" />
+        <collection property="subs" select="com.atguigu.mybatis.mapper.SubjectMapper.getSubjectByTypeName"
+        column="{typeId=type_id}"></collection>
+    </resultMap>
+    <!--Type getTypeIdByNameByStep(String type_name);-->
+    <select id="getTypeIdByNameByStep" resultMap="MyTypeStep">
+        select * from tbl_type
+        where type_name = #{typeName}
+    </select>
 </mapper>

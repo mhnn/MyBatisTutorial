@@ -5,10 +5,10 @@ public class Subject {
     private String sName;
     private String sDirector;
     private String sActor;
-    private Integer picId;
+    private String picSrc;
     private Float sRate;
     private String sDate;
-    private Integer typeId;
+    private Type type;
     private String sContent;
     private Integer sHit;
 
@@ -16,9 +16,6 @@ public class Subject {
         return sId;
     }
 
-    public void setsId(Integer sId) {
-        this.sId = sId;
-    }
 
     public String getsName() {
         return sName;
@@ -44,12 +41,12 @@ public class Subject {
         this.sActor = sActor;
     }
 
-    public Integer getPicId() {
-        return picId;
+    public String getPicSrc() {
+        return picSrc;
     }
 
-    public void setPicId(Integer picId) {
-        this.picId = picId;
+    public void setPicSrc(String picSrc) {
+        this.picSrc = picSrc;
     }
 
     public Float getsRate() {
@@ -68,12 +65,12 @@ public class Subject {
         this.sDate = sDate;
     }
 
-    public Integer getTypeId() {
-        return typeId;
+    public Type getType() {
+        return type;
     }
 
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public String getsContent() {
@@ -90,5 +87,21 @@ public class Subject {
 
     public void setsHit(Integer sHit) {
         this.sHit = sHit;
+    }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "sId=" + sId +
+                ", sName='" + sName + '\'' +
+                ", sDirector='" + sDirector + '\'' +
+                ", sActor='" + sActor + '\'' +
+                ", picSrc='" + picSrc + '\'' +
+                ", sRate=" + sRate +
+                ", sDate='" + sDate + '\'' +
+                ", type=" + type +
+                ", sContent='" + sContent + '\'' +
+                ", sHit=" + sHit +
+                '}';
     }
 }

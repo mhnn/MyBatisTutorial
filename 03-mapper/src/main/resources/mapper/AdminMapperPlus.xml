@@ -24,4 +24,5 @@
     <select id="getAdminById" resultMap="myAdmin">
         select * from tbl_admin where a_id = #{aId}
     </select>
+
 </mapper>

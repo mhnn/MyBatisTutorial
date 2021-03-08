@@ -10,5 +10,11 @@ public interface TypeMapper {
     @MapKey("typeName")
     List<Map<String,Integer>> getTypeInfo();
 
+    String getTypeById(Integer typeId);
+
     Integer selectTypeIdByName(String typeName);
+
+    Type getTypeByIdPlus(Integer typeId);
+
+    Type getTypeIdByNameByStep(String type_name);
 }

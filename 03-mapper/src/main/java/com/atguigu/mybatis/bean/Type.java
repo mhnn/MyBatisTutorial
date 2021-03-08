@@ -1,10 +1,22 @@
 package com.atguigu.mybatis.bean;
 
-public class Type {
-    private int typeId;
-    private String typeName;
+import java.util.List;
 
-    public int getTypeId() {
+public class Type {
+    private Integer typeId;
+    private String typeName;
+    private List<Subject> subs;
+
+
+    public List<Subject> getSubs() {
+        return subs;
+    }
+
+    public void setSubs(List<Subject> subs) {
+        this.subs = subs;
+    }
+
+    public Integer getTypeId() {
         return typeId;
     }
 
@@ -18,5 +30,13 @@ public class Type {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    @Override
+    public String toString() {
+        return "Type{" +
+                "typeId=" + typeId +
+                ", typeName='" + typeName + '\'' +
+                '}';
     }
 }

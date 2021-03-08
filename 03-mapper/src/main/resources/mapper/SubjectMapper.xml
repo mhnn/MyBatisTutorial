@@ -3,6 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.mybatis.mapper.SubjectMapper">
+
+    <!--使用级联属性封装结果集-->
+    <resultMap id="MyDifSub" type="com.atguigu.mybatis.bean.Subject">
+        <id column="s_id" property="sId" />
+        <result column="s_name" property="sName" />
+        <result column="s_director" property="sDirector" />
+        <result column="s_actor" property="sActor" />
+        <result column="pic_src" property="picSrc" />
+        <result column="s_rate" property="sRate" />
+        <result column="s_date" property="sDate" />
+        <!--使用级联属性封装结果集-->
+<!--        <result column="type_id" property="type.typeId" />-->
+<!--        <result column="type_name" property="type.typeName" />-->
+        <result column="s_content" property="sContent" />
+        <result column="s_hit" property="sHit" />
+        <!--使用association封装结果集-->
+        <association property="type" javaType="com.atguigu.mybatis.bean.Type">
+            <id property="typeId" column="type_id" />
+            <result column="type_name" property="typeName" />
+        </association>
+    </resultMap>
+
     <update id="updateSubjectType" >
         update tbl_subject
         set type_id = #{typeId}
@@ -24,4 +46,49 @@
         set s_hit = #{sHit}
         where s_id = #{sId}
     </update>
+
+
+    <!--Subject getSubjectAndType(Integer sId);-->
+    <select id="getSubjectAndType" resultMap="MyDifSub">
+        select s_id,s_name,s_director,s_actor,pic_src,s_rate,s_date,a.type_id,b.type_name,s_content,s_hit
+        from tbl_subject a,tbl_type b
+        where a.type_id = b.type_id and a.s_id = #{sId}
+    </select>
+
+    <!--association分布查询
+        1.先按照电影id查出出电影信息
+        2.根据查出的电影信息中的type_id值去查出类型信息
+        3.类型设置到电影中
+    -->
+    <resultMap id="MySubjectBySetp" type="com.atguigu.mybatis.bean.Subject">
+        <id column="s_id" property="sId" />
+        <result column="s_name" property="sName" />
+        <result column="s_director" property="sDirector" />
+        <result column="s_actor" property="sActor" />
+        <result column="pic_src" property="picSrc" />
+        <result column="s_rate" property="sRate" />
+        <result column="s_date" property="sDate" />
+        <result column="s_content" property="sContent" />
+        <result column="s_hit" property="sHit" />
+        <!--使用association封装结果集
+            select:表明当前这个属性是既调用select指定的方法查出来的
+            column:指定将哪一列的值传给这个方法,查出对象并封装给property指定的属性
+        -->
+        <association property="type" select="com.atguigu.mybatis.mapper.TypeMapper.getTypeById"
+        column="type_id">
+            <id property="typeId" column="type_id" />
+            <result column="type_name" property="typeName" />
+        </association>
+    </resultMap>
+    <!--Subject getSubjectByStep(Integer sId);-->
+    <select id="getSubjectByStep" resultMap="MySubjectBySetp">
+        select * from tbl_subject
+        where s_id = #{sId}
+    </select>
+
+    <!--List<Subject> getSubjectByTypeName(String typeName);-->
+    <select id="getSubjectByTypeName" resultType="com.atguigu.mybatis.bean.Subject">
+        select * from tbl_subject
+        where type_id = #{typeId}
+    </select>
 </mapper>
