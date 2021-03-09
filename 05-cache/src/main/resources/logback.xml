@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>
+        </layout>
+    </appender>
+<!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <file>E:\\logs\\ijiuwen.log</file>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>E:\\logs\\vnetoo.%d{yyyy-MM-dd}.log.zip</fileNamePattern>-->
+<!--            &lt;!&ndash; 如果按天来回滚，则最大保存时间为1天，1天之前的都将被清理掉 &ndash;&gt;-->
+<!--            <maxHistory>30</maxHistory>-->
+<!--            &lt;!&ndash; 按时间回滚的同时，按文件大小来回滚 &ndash;&gt;-->
+<!--            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+<!--                <maxFileSize>100MB</maxFileSize>-->
+<!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+<!--        </rollingPolicy>-->
+<!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--            <pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>-->
+<!--        </layout>-->
+<!--    </appender>-->
+
+    <!-- jdk log  -->
+<!--    <logger name="java.beans" level="DEBUG" />-->
+    <root level="DEBUG">
+        <appender-ref ref="stdout" />
+    </root>
+</configuration>
