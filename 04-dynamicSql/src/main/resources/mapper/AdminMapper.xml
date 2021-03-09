@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace:指定为mapper接口的全类名
+现今Admin的mapper映射文件已与AdminMapper接口绑定,而接口内有个查询方法
+映射文件                    接口
+命名空间            <===>   接口全类名
+查询体唯一标识id    <===>   接口方法名
+这样子就表示了这个select标签是这个mapper接口的这个方法的实现
+
+这么做的好处是:
+1.在执行查询语句时,指定的sql语句的id可以变短
+2.selectOne默认传参类型是Object,使用接口动态绑定后可以限制为业务想要的类型(类型安全)
+-->
+<mapper namespace="com.atguigu.mybatis.mapper.AdminMapper">
+    
+    <!--Map<Integer,Admin> getAdminByNameLikeReturnMap(String aName);-->
+    <select id="getAdminByNameLikeReturnMap" resultType="admin">
+        select * from tbl_admin where a_name like #{aName}
+    </select>
+    <!--Map<String,Object> getAdminByIdRturnMap(Integer aId);-->
+    <select id="getAdminByIdReturnMap" resultType="map">
+        select * from tbl_admin where a_id = #{aId}
+    </select>
+    <select id="getAdminByNameLike" resultType="admin">
+        select * from tbl_admin where a_name like #{aName}
+    </select>
+    <!--查询map-->
+    <select id="getAdminByMap" resultType="admin">
+
+        select * from tbl_admin where a_id = #{aId} and a_name = #{aName}
+    </select>
+    <!--查询-->
+    <select id="getAdminByIdAndName" resultType="admin">
+        <!--#{id}从传递过来的参数中取出id值 -->
+        select * from tbl_admin where a_id = #{aId} and a_name = #{aName}
+    </select>
+    <!--插入-->
+    <!--parameterType:参数类型,可省略
+        支持获取自增主键,方式
+        useGeneratedKeys="true" 使用自增主键获取主键值的策略
+        keyProperty 指定对应的主键属性,也就是mybatis获取到主键值后,将这个值封装给JavaBean的哪个属性
+        -->
+    <insert id="addAdmin" parameterType="com.atguigu.mybatis.bean.Admin"
+    useGeneratedKeys="true" keyProperty="aId">
+        insert into tbl_admin(a_name,a_password)
+        values(#{aName},#{aPassword})
+    </insert>
+    <!--更新-->
+    <update id="updateAdmin">
+        update tbl_admin
+        set a_name = #{aName},a_password = #{aPassword}
+        where a_id = #{aId}
+    </update>
+    <!--删除-->
+    <delete id="deleteAdmin">
+        delete from tbl_admin where a_id = #{aId}
+    </delete>
+</mapper>
