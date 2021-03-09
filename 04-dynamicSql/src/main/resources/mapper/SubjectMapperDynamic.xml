@@ -12,16 +12,110 @@
     <!--List<Subject> getSubsByConditionIf(Subject subject);-->
     <select id="getSubsByConditionIf" resultType="subject">
         select * from tbl_subject
-        where
-        <!--test：判断表达式，c:if  test-->
-        <if test="sId!=null">
+        <where>
+            <!--test：判断表达式，c:if  test-->
+            <if test="sId!=null">
+                s_id = #{sId}
+            </if>
+             <if test="sHit != '' and sHit != null">
+                and s_hit > #{sHit}
+             </if>
+             <if test="sDate != null and sDate.trim() != ''">
+                 and s_date like #{sDate}
+             </if>
+        </where>
+    </select>
+    <!--  List<Subject> getSubsByConditionTrim(Subject subject);  -->
+    <select id="getSubsByConditionTrim" resultType="subject">
+        select * from tbl_subject
+        <!-- 后边多出的and、or  where不能解决-->
+        <!--
+        prefix:前缀，trim标签体中是整个字符串拼串后的结果。prefix给拼串后的字符串加前缀
+        prefixOverrides：前缀覆盖。去掉整个字符串中多余的字符
+        suffix：后缀。
+        suffixOverrides：后缀覆盖。本例中拼完后可能结尾多个and，所以这里填and
+        -->
+        <trim prefix="where" suffixOverrides="and">
+            <if test="sId!=null">
+                s_id = #{sId} and
+            </if>
+            <if test="sHit != '' and sHit != null">
+                 s_hit > #{sHit} and
+            </if>
+            <if test="sDate != null and sDate.trim() != ''">
+                s_date like #{sDate}
+            </if>
+        </trim>
+    </select>
+    <!--  List<Subject> getSubsByConditionChoose(Subject subject);  -->
+    <select id="getSubsByConditionChoose" resultType="subject">
+        select * from tbl_subject
+        <where>
+            <choose>
+                <when test="sId!=null">
+                    s_id = #{sId}
+                </when>
+                <when test="sHit!=null and sHit != ''">
+                    s_hit > #{sHit}
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <!--  void updateSubjectInfo(Subject subject);  -->
+    <select id="updateSubjectInfo" resultType="subject">
+        update tbl_subject
+        <set>
+            <if test="sName != null">
+                s_name = #{sName},
+            </if>
+            <if test="sDirector!=null">
+                s_director = #{sDirector},
+            </if>
+            <if test="sActor != null">
+                s_actor = #{sActor},
+            </if>
+            <if test="picSrc!=null">
+                pic_src = #{picSrc},
+            </if>
+            <if test="sRate!=null">
+                s_rate = #{sRate},
+            </if>
+            <if test="sDate!=null">
+                s_date = #{sDate},
+            </if>
+            <if test="typeId!=null">
+                type_id = #{typeId},
+            </if>
+            <if test="sContent!=null">
+                s_content = #{sContent},
+            </if>
+            <if test="sHit!=null">
+                s_hit = #{sHit},
+            </if>
+        </set>
+        <where>
             s_id = #{sId}
-        </if>
-         <if test="sHit != '' and sHit != null">
-               1=1 and s_hit > #{sHit}
-         </if>
-         <if test="sDate != null and sDate.trim() != ''">
-             and s_date like #{sDate}
-         </if>
+        </where>
+    </select>
+    <!--   List<Subject> getSubsByConditionForeach(List<Integer> typeIds);  -->
+    <select id="getSubsByConditionForeach" resultType="subject">
+        select * from tbl_subject
+        where type_id in
+        <!-- collection:指定要遍历的集合类型（list、map。。。）
+         list类型的参数会特殊地处理封装在map中，map的key就是list
+         item：将当前遍历出的元素赋值给指定变量
+         separator="":每个元素之间的分隔符
+         open:遍历完所有结果，在开头拼接一个open指定的值
+         close：遍历完所有结果，在结尾拼接一个指定值
+         index=""：索引。遍历list的时候是索引，item就是值
+                        遍历map的时候index代表map的key，item就是map的值
+         -->
+        <foreach collection="list" item="item_id" separator=","
+        open="(" close=")">
+            #{item_id}
+        </foreach>
     </select>
 </mapper>
